@@ -12,7 +12,7 @@ import { Article } from './article/article.entity';
         TypeOrmModule.forRoot({
             type: 'postgres',
             host: 'rc1b-th42tz2y4i8x34jc.mdb.yandexcloud.net',
-            port: 5432, // 5432 - по дефолту; 6432 - у яндекса
+            port: 6432, // 5432 - по дефолту; 6432 - у яндекса
             username: 'user1',
             password: 'qwerty123',
             database: 'db',
