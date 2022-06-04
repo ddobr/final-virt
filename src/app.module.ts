@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     imports: [
         ConfigModule.forRoot({
             envFilePath: '.env',
+            isGlobal: true
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],

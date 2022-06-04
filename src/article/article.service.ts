@@ -6,18 +6,21 @@ import { Repository } from 'typeorm';
 import { Article } from './article.entity';
 import { CreateArticleDto } from './dto/req/create-article.dto';
 import * as FormData from 'form-data';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class ArticleService {
 
-    private _bucketEndpoint = 'https://storage.yandexcloud.net/some-bucket-123';
+    private _bucketEndpoint = this._config.get('BUCKET_URL');
+    // private _bucketEndpoint = 'https://storage.yandexcloud.net/some-bucket-123'
 
     @InjectRepository(Article)
     private _articleRepository: Repository<Article>;
 
     constructor(
-        private _httpService: HttpService
+        private _httpService: HttpService,
+        private _config: ConfigService
     ) {
 
     }
