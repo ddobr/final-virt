@@ -6,7 +6,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
         cors: true
     });
-    
+
     app.useGlobalPipes(
         // Пайпа валидации дтошек
         new ValidationPipe({

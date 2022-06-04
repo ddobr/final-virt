@@ -15,4 +15,10 @@ export class Article {
 
     @CreateDateColumn()
     createdDate: Date;
+
+
+    @Column({
+        nullable: true
+    })
+    imgSrc: string | null;
 }

@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Article } from './article.entity';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/req/create-article.dto';
@@ -15,8 +16,9 @@ export class ArticleController {
     }
 
     @Post()
-    public postArticle(@Body() createPostDto: CreateArticleDto): Promise<number> {
-        return this._articleService.createArticle(createPostDto);
+    @UseInterceptors(FileInterceptor('img'))
+    public postArticle(@Body() createPostDto: CreateArticleDto, @UploadedFile() img:  Express.Multer.File): Promise<number> {
+        return this._articleService.createArticle(createPostDto, img);
     }
 
     @Get(':id')

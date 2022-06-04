@@ -2,28 +2,31 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as fs from 'fs';
-import * as path from 'path';
 import { UsersModule } from './article/article.module';
-import { Article } from './article/article.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: 'rc1b-th42tz2y4i8x34jc.mdb.yandexcloud.net',
-            port: 6432, // 5432 - по дефолту; 6432 - у яндекса
-            username: 'user1',
-            password: 'qwerty123',
-            database: 'db',
-            //entities: [Article],
-            // ssl: {
-            //     ca: fs.readFileSync(path.resolve(__dirname, '../certs/root.crt'))
-            // },
-            synchronize: true,
-            autoLoadEntities: true,
-          }),
-        UsersModule
+        ConfigModule.forRoot({
+            envFilePath: '.env',
+        }),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (config: ConfigService) => {
+                return {
+                    type: 'postgres',
+                    autoLoadEntities: true,
+                    host: config.get('DB_HOST'),
+                    port: Number.parseInt(config.get('DB_PORT')),
+                    username: config.get('DB_USER'),
+                    password: config.get('DB_PWD'),
+                    database: config.get('DB_NAME'),
+                    synchronize: config.get('DB_SYNC') === 'true'
+                }
+            }
+        }),
+        UsersModule,
     ],
     controllers: [AppController],
     providers: [AppService],
